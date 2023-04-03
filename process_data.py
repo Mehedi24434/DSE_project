@@ -11,6 +11,9 @@ url= 'https://www.dsebd.org/'
 response = requests.get(url)
 soup = BeautifulSoup(response.content, 'html.parser')
 def writter():
+    url= 'https://www.dsebd.org/'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
     def Time_checker(Date= False, Current_Time= False, Market_Status= False):
         div1 = soup.find('div', {'class': 'containbox'})
         div2 = div1.find('div',{'class':'col-md-12 col-xs-12 col-sm-12'})
@@ -87,37 +90,6 @@ def writter():
 
 
 def reader():
-    import requests
-    from datetime import datetime
-    import time
-    import pandas as pd
-    from bs4 import BeautifulSoup
-    from influxdb_client import InfluxDBClient, Point
-    from influxdb_client.client.write_api import ASYNCHRONOUS, WritePrecision
-    from influxdb_client.rest import ApiException
-    import re
-    url= 'https://www.dsebd.org/'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    def Time_checker(Date= False, Current_Time= False, Market_Status= False):
-        div1 = soup.find('div', {'class': 'containbox'})
-        div2 = div1.find('div',{'class':'col-md-12 col-xs-12 col-sm-12'})
-        div3 = div2.find('div',{'class':'_row'})
-        head1 = div3.find('header',{'class':'Header'})
-        Hdiv = head1.find('div',{'class':'HeaderTop'})
-        span_all = Hdiv.find_all('span',{'class':'time'})
-        text = []
-        for s in span_all:
-            span_text = s.text.strip()
-            text.append(span_text)
-        if Date == True:
-            return datetime.strptime(text[0], "%A, %B %d, %Y").date()
-        if Current_Time == True:
-            time_str = text[1].split(": ")[1].strip("(BST)")
-            time_obj = datetime.strptime(time_str, "%H:%M:%S %p ").time()
-            return time_obj
-        if Market_Status == True:
-            return text[2].split(": ")[1]
     
     def ready_influx (write = False, query = False, bucket = 'mybuc'):
         url = "http://localhost:8086"
@@ -148,24 +120,27 @@ def reader():
     
     
 def Time_checker(Date= False, Current_Time= False, Market_Status= False):
-        div1 = soup.find('div', {'class': 'containbox'})
-        div2 = div1.find('div',{'class':'col-md-12 col-xs-12 col-sm-12'})
-        div3 = div2.find('div',{'class':'_row'})
-        head1 = div3.find('header',{'class':'Header'})
-        Hdiv = head1.find('div',{'class':'HeaderTop'})
-        span_all = Hdiv.find_all('span',{'class':'time'})
-        text = []
-        for s in span_all:
-            span_text = s.text.strip()
-            text.append(span_text)
-        if Date == True:
-            return datetime.strptime(text[0], "%A, %B %d, %Y").date()
-        if Current_Time == True:
-            time_str = text[1].split(": ")[1].strip("(BST)")
-            time_obj = datetime.strptime(time_str, "%H:%M:%S %p ").time()
-            return time_obj
-        if Market_Status == True:
-            return text[2].split(": ")[1]
+    url= 'https://www.dsebd.org/'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    div1 = soup.find('div', {'class': 'containbox'})
+    div2 = div1.find('div',{'class':'col-md-12 col-xs-12 col-sm-12'})
+    div3 = div2.find('div',{'class':'_row'})
+    head1 = div3.find('header',{'class':'Header'})
+    Hdiv = head1.find('div',{'class':'HeaderTop'})
+    span_all = Hdiv.find_all('span',{'class':'time'})
+    text = []
+    for s in span_all:
+        span_text = s.text.strip()
+        text.append(span_text)
+    if Date == True:
+        return datetime.strptime(text[0], "%A, %B %d, %Y").date()
+    if Current_Time == True:
+        time_str = text[1].split(": ")[1].strip("(BST)")
+        time_obj = datetime.strptime(time_str, "%H:%M:%S %p ").time()
+        return time_obj
+    if Market_Status == True:
+        return text[2].split(": ")[1]
 
   
 
